@@ -1,9 +1,7 @@
 setwd("~/University/5A/BU425/Whitepaper")
 
-install.packages("car")
 library(car)
 source('./mylib2.r')
-library(MASS)
 
 # BU425 Whitepaper
 
@@ -34,7 +32,7 @@ dim(PatientData)
 # Examining some basic pairwise plots (but remember multivariate problem) -> export this to folder
 
 # Examining the pairwise plots of the variables that show relationships amongst each other
-pairs(~?..PatientID + AgeGroup + Gender + TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon + DiseaseType + InterventionType + AnaesthesiaType + SCU + DaysHospitalized + AcuteCareDays + ALCDays + Readmittance,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
+pairs(~ï..PatientID + AgeGroup + Gender + TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon + DiseaseType + InterventionType + AnaesthesiaType + SCU + DaysHospitalized + AcuteCareDays + ALCDays + Readmittance,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
 pairs(~TransferTo + DischargeDispositon + DaysHospitalized + AcuteCareDays + ALCDays,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
 pairs(~DaysHospitalized + AcuteCareDays + ALCDays,data=PatientData[sample(nrow(PatientData),1000),],main="Pairwise Plots", col = "red", pch = 22)
 
@@ -111,19 +109,248 @@ test <- PatientData[-train_ind, ]
 Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + InterventionType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
 summary(Imodel)
 
-Imodel.back <- stepAIC(Imodel, direction = "backward")
-summary(Imodel.back)
+# drop InterventionType
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
 
-Imodel <- glm(Readmittance ~ DaysHospitalized + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + InterventionType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
-Imodel.back <- stepAIC(Imodel, direction = "backward")
-summary(Imodel.back)
-# <none> so no more variables will be dropped
+# drop TransferFrom == 'Special Rehab
+train$TransferFrom[train$TransferFrom == 'Special Rehab'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
 
-#end of backwards elimination
+# drop DiseaseType == 'Diseases of the Genitourinary System
+train$DiseaseType[train$DiseaseType == 'Diseases of the Genitourinary System'] <- NA
+droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AnaesthesiaType == 'Spinal
+train$AnaesthesiaType[train$AnaesthesiaType == 'Spinal'] <- NA
+x <- droplevels(train$AnaesthesiaType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AgeGroup == '35-39 yrs'
+train$AgeGroup[train$AgeGroup == '35-39 yrs'] <- NA
+x <- droplevels(train$AgeGroup)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DischargeDispositon == 'Long Term Care Transfer
+train$DischargeDispositon[train$DischargeDispositon == 'Long Term Care Transfer'] <- NA
+x <- droplevels(train$DischargeDispositon)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Congenital Malformations
+train$DiseaseType[train$DiseaseType == 'Congenital Malformations'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferTo == 'General Rehab
+train$TransferTo[train$TransferTo == 'General Rehab'] <- NA
+x <- droplevels(train$TransferTo)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AgeGroup == '30-34 yrs'
+train$AgeGroup[train$AgeGroup == '30-34 yrs'] <- NA
+x <- droplevels(train$AgeGroup)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Pregnancy
+train$DiseaseType[train$DiseaseType == 'Pregnancy'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Chronic Care 
+train$TransferFrom[train$TransferFrom == 'Chronic Care'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AnaesthesiaType == 'General
+train$AnaesthesiaType[train$AnaesthesiaType == 'General'] <- NA
+x <- droplevels(train$AnaesthesiaType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop EmergencyCode == 'Emergency
+train$EmergencyCode[train$EmergencyCode == 'Emergency'] <- NA
+x <- droplevels(train$EmergencyCode)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Outpatient
+train$TransferFrom[train$TransferFrom == 'Outpatient'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Home Care
+train$TransferFrom[train$TransferFrom == 'Home Care'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Day Surgery
+train$TransferFrom[train$TransferFrom == 'Day Surgery'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Body Injury
+train$DiseaseType[train$DiseaseType == 'Body Injury'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferTo == 'Ambulatory Care
+train$TransferTo[train$TransferTo == 'Ambulatory Care'] <- NA
+x <- droplevels(train$TransferTo)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Diseases of the Digestive System
+train$DiseaseType[train$DiseaseType == 'Diseases of the Digestive System'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferTo == 'Unclassified
+train$TransferTo[train$TransferTo == 'Unclassified'] <- NA
+x <- droplevels(train$TransferTo)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DischargeDispositon == 'Inpatient Transfer
+train$DischargeDispositon[train$DischargeDispositon == 'Inpatient Transfer'] <- NA
+x <- droplevels(train$DischargeDispositon)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DischargeDispositon == 'Other Transfer
+train$DischargeDispositon[train$DischargeDispositon == 'Other Transfer'] <- NA
+x <- droplevels(train$DischargeDispositon)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Burns and Corrosions
+train$DiseaseType[train$DiseaseType == 'Burns and Corrosions'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Diseases of the Ear and Mastoid Process
+train$DiseaseType[train$DiseaseType == 'Diseases of the Ear and Mastoid Process'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferTo
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Unclassified
+train$TransferFrom[train$TransferFrom == 'Unclassified'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DischargeDispositon+DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop Discharge disposition
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop SCU
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Endocrine, Nutritional, and Metabolic Diseases
+train$DiseaseType[train$DiseaseType == 'Endocrine, Nutritional, and Metabolic Diseases'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'General Rehab
+train$TransferFrom[train$TransferFrom == 'General Rehab'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Mental and Behaviour Disorders
+train$DiseaseType[train$DiseaseType == 'Mental and Behaviour Disorders'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AnaesthesiaType == 'Epidural
+train$AnaesthesiaType[train$AnaesthesiaType == 'Epidural'] <- NA
+x <- droplevels(train$AnaesthesiaType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop AgeGroup == '25-29 yrs
+train$AgeGroup[train$AgeGroup == '25-29 yrs'] <- NA
+x <- droplevels(train$AgeGroup)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Infectious and Parasitic Diseases
+train$DiseaseType[train$DiseaseType == 'Infectious and Parasitic Diseases'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Health Status Factors
+train$DiseaseType[train$DiseaseType == 'Health Status Factors'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Nursing Home
+train$TransferFrom[train$TransferFrom == 'Nursing Home'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Ambulatory Care
+train$TransferFrom[train$TransferFrom == 'Ambulatory Care'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop TransferFrom == 'Aged Home
+train$TransferFrom[train$TransferFrom == 'Aged Home'] <- NA
+x <- droplevels(train$TransferFrom)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop Admitcode
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop DiseaseType == 'Diseases of the Nervous System
+train$DiseaseType[train$DiseaseType == 'Diseases of the Nervous System'] <- NA
+x <- droplevels(train$DiseaseType)
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
+
+# drop ALC Days
+Imodel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + AgeGroup +Gender+ TransferFrom + EmergencyCode + DiseaseType + AnaesthesiaType, family=binomial(link='logit'), data = train)
+summary(Imodel)
 # ------------------------------------
 
+
+
+
+#end of backwards elimination
+
 # Run the Logistic Regression
-ReadmitModel <- glm(Readmittance ~ DaysHospitalized + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon+DiseaseType + InterventionType + AnaesthesiaType + SCU, family=binomial(link='logit'), data = test)
+ReadmitModel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DiseaseType + InterventionType, family=binomial(link='logit'), data = test)
 
 # Summary of the Model
 summary(ReadmitModel)
@@ -165,6 +392,8 @@ if (length(pcd[pcd>0.15]) > 0) {
 }
 
 
+ReadmitModel <- glm(Readmittance ~ DaysHospitalized + AcuteCareDays + ALCDays + AgeGroup +Gender+ TransferFrom + AdmitCode + EmergencyCode + TransferTo + DiseaseType + InterventionType, family=binomial(link='logit'), data = test)
+
 ReadmitNum <- rep(0, length(test$Readmittance))
 ReadmitNum[test$Readmittance == "Yes"] <- 1
 
@@ -186,12 +415,5 @@ specificity
 Accuracy <- (conf_matrix[1,1]+ conf_matrix[2,2])/(conf_matrix[1,1] + conf_matrix[1, 2]+conf_matrix[2,1]+conf_matrix[2, 2])
 Accuracy
 
-cor.test(ReadmitNum, predStatus)
-library(pROC)
-roc_obj <- roc(ReadmitNum, predStatus)
-auc(roc_obj)
-auc(ReadmitNum, predStatus)
 
-plot(roc(ReadmitNum, predStatus, direction="<"), print.auc=TRUE, lwd=3, legacy.axes= TRUE, xlab= "False Positive Precentage", ylab= "True Positive Percentage", main="ROC Curve")
 
-plot(roc(ReadmitNum, predStatus), )
