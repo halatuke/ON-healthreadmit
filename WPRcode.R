@@ -1,22 +1,11 @@
+## Original Whitepaper Code
+
 setwd("~/University/5A/BU425/Whitepaper")
 
 library(car)
 source('./mylib2.r')
 
 # BU425 Whitepaper
-
-#Things to add: 
-  # extensive details about the dataset 
-    # dataset 
-  # decision tree
-  # cook's distance
-  # VIF
-  # training and test data sets
-# outliers
-# pair graphs
-# basic stats on factor variable -> bar graph => unsure how to 
-# clustering -> log regression and accounted for clustering 
-  
 
 # Read the data
 
@@ -31,8 +20,8 @@ dim(PatientData)
 # Look at the data
 # Examining some basic pairwise plots (but remember multivariate problem) -> export this to folder
 
-# Examining the pairwise plots of the variables that show relationships amongst each other
-pairs(~ï..PatientID + AgeGroup + Gender + TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon + DiseaseType + InterventionType + AnaesthesiaType + SCU + DaysHospitalized + AcuteCareDays + ALCDays + Readmittance,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
+# Examining the pairwise plots of the variables that show relationships among each other
+pairs(~Ã¯..PatientID + AgeGroup + Gender + TransferFrom + AdmitCode + EmergencyCode + TransferTo + DischargeDispositon + DiseaseType + InterventionType + AnaesthesiaType + SCU + DaysHospitalized + AcuteCareDays + ALCDays + Readmittance,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
 pairs(~TransferTo + DischargeDispositon + DaysHospitalized + AcuteCareDays + ALCDays,data=PatientData[sample(nrow(PatientData),1000),],main="Plots")
 pairs(~DaysHospitalized + AcuteCareDays + ALCDays,data=PatientData[sample(nrow(PatientData),1000),],main="Pairwise Plots", col = "red", pch = 22)
 
